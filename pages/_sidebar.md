@@ -27,3 +27,7 @@
   - [设置](settings.md)
   - [文件格式](file-format.md)
   - [快捷键](shortcuts.md)
+
+- 邦多利角色信息
+  - [主要角色](bangdream-main-character.md)
+  - [其他角色](bangdream-npc.md)
