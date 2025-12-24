@@ -31,3 +31,4 @@
 - 邦多利角色信息
   - [主要角色](bangdream-main-character.md)
   - [其他角色](bangdream-npc.md)
+  - [Live2D 图鉴](bangdream-live2d-thumbnails.md)
