@@ -5,7 +5,7 @@
   content-visibility: auto;
   contain-intrinsic-size: 1200px; /* 估算该组未渲染时的占位高度 */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
   gap:2px;
 }
 
