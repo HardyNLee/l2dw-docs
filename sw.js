@@ -55,12 +55,30 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // Skip some of cross-origin requests, like those for Google Analytics.
   if (HOSTNAME_WHITELIST.indexOf(new URL(event.request.url).hostname) > -1) {
-    // Stale-while-revalidate
-    // similar to HTTP's stale-while-revalidate: https://www.mnot.net/blog/2007/12/12/stale
-    // Upgrade from Jake's to Surma's: https://gist.github.com/surma/eb441223daaedf880801ad80006389f1
+    // 图片资源使用 cache-first 策略（优先缓存，支持离线）
+    if (event.request.url.match(/\.(webp|png|jpg|jpeg|gif|svg)$/i)) {
+      event.respondWith(
+        caches.match(event.request).then(cached => {
+          if (cached) {
+            return cached;
+          }
+          // 缓存未命中时，使用 default 模式尊重 HTTP 缓存
+          return fetch(event.request, { cache: 'default' }).then(response => {
+            if (response.ok) {
+              const responseClone = response.clone();
+              caches.open(RUNTIME).then(cache => cache.put(event.request, responseClone));
+            }
+            return response;
+          });
+        })
+      );
+      return;
+    }
+    
+    // 其他资源继续使用 stale-while-revalidate
     const cached = caches.match(event.request)
     const fixedUrl = getFixedUrl(event.request)
-    const fetched = fetch(fixedUrl, { cache: 'no-store' })
+    const fetched = fetch(fixedUrl, { cache: 'default' }) // 改为 default，尊重 HTTP 缓存
     const fetchedCopy = fetched.then(resp => resp.clone())
 
     // Call respondWith() with whatever we get first.
